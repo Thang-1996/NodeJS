@@ -3,17 +3,28 @@
 
 // we've started you off with Express (https://expressjs.com/)
 // but feel free to use whatever libraries or frameworks you'd like through `package.json`.
-var express = require('express');
-var app = express();
-var port = 3000;
-app.get('/',function (request,response) { // function call back nhận vào 2 tham số request : những thứ mà người dùng gửi response người dùng trả về
-    response.send('<ul>' +
-        '<li>Đi chợ</li>' +
-        '<li>Nấu cơm</li>' +
-        '<li>Rửa bát</li>' +
-        '<li>Học code tại CodersX</li>' +
-        '</ul>');
+const express = require('express');
+const app = express();
+app.set('view engine', 'pug');
+app.set('views', './views');
+var todos =  ['Đi chợ','Nấu Cơm','Học Tại Codersx']
+// https://expressjs.com/en/starter/basic-routing.html
+app.get('/',function(req,res){
+  res.render('index',{
+    todos : todos
+  });
 });
-app.listen(port,function () {
-    console.log('Sever listening on port'+port);
+
+app.get('/todos',function(req,res){
+  var q = req.query.q;
+  var matchedTodos = todos.filter(function(todo){
+    return todo.toLowerCase().indexOf(q.toLowerCase()) !== -1
+  });
+  res.render('index',{
+    todos : matchedTodos
+  });
+});
+// listen for requests :)
+app.listen(process.env.PORT, () => {
+  console.log("Server listening on port " + process.env.PORT);
 });
